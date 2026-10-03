@@ -59,7 +59,7 @@ aptos/
 ├── src/
 │   ├── inference.py        # preprocessing, fundus image check, model loading, flip-TTA prediction
 │   └── grade_info.py       # educational text for each DR grade, causes, symptoms
-├── models/                 # put best_model_effi.pth here (not tracked by git)
+├── models/                 # best_model_effi.pth, auto-downloaded from the v1.0 release (not tracked by git)
 └── assets/examples/        # reference image per grade from APTOS train set (not tracked by git)
 ```
 
@@ -75,9 +75,10 @@ A Streamlit app for grading your own fundus images with the trained model.
 
 ### Setup
 
-1. Download `best_model_effi.pth` from the training notebook's output and place it in the `models/` folder. (Kaggle may download it as `best_model_effi.zip`; don't extract it, just rename it to `.pth`.)
-2. `pip install -r requirements.txt`
-3. `streamlit run app.py`, then open http://localhost:8501
+1. `pip install -r requirements.txt`
+2. `streamlit run app.py`, then open http://localhost:8501
+
+On first run the app downloads the trained weights (`best_model_effi.pth`, 43 MB) from the [v1.0 release](https://github.com/suyogkarki1/aptos-2019-blindness-detection/releases/tag/v1.0) into `models/` and verifies the checksum. To do it manually, download the file from the release into `models/`.
 
 Optional: put one labelled APTOS training image per grade in `assets/examples/` as `grade_0.jpg` … `grade_4.jpg` to show reference images in the app.
 

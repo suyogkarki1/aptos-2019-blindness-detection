@@ -14,6 +14,9 @@ from src.inference import check_fundus, load_model, predict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WEIGHTS = os.path.join(HERE, "models", "best_model_effi.pth")
+WEIGHTS_URL = ("https://github.com/suyogkarki1/aptos-2019-blindness-detection/"
+               "releases/download/v1.0/best_model_effi.pth")
+WEIGHTS_SHA256 = "f82d2fc37e96dcac4c3bfcc7e9ab9567485658ed94e4979cad1f88d66e02f74a"
 EXAMPLES = os.path.join(HERE, "assets", "examples")
 
 st.set_page_config(page_title="APTOS DR Grading", page_icon="👁️", layout="wide")
@@ -77,11 +80,17 @@ def card(title, body):
 # ---------- sidebar ----------
 st.sidebar.header("Model")
 if not os.path.exists(WEIGHTS):
-    st.sidebar.error(
-        "`models/best_model_effi.pth` not found. Put the training notebook's output "
-        "in the `models` folder and refresh."
-    )
-    st.stop()
+    # first run after cloning: fetch the weights from the GitHub release
+    try:
+        with st.spinner("Downloading model weights (43 MB, first run only)..."):
+            os.makedirs(os.path.dirname(WEIGHTS), exist_ok=True)
+            torch.hub.download_url_to_file(WEIGHTS_URL, WEIGHTS, hash_prefix=WEIGHTS_SHA256)
+    except Exception as e:
+        st.sidebar.error(
+            f"Could not download the model ({e}). Download `best_model_effi.pth` "
+            f"from {WEIGHTS_URL} into the `models` folder and refresh."
+        )
+        st.stop()
 
 model, device = get_model()
 st.sidebar.success(f"EfficientNet-B3 (regression)\n\nDevice: {device.type.upper()}")
