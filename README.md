@@ -13,6 +13,19 @@ Grading diabetic retinopathy severity (0–4) from retina images, built in PyTor
 | 3 | Severe |
 | 4 | Proliferative DR |
 
+## Quick start
+
+Run the web app locally (the trained model downloads automatically on first run):
+
+```
+git clone https://github.com/suyogkarki1/aptos-2019-blindness-detection.git
+cd aptos-2019-blindness-detection
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Then open http://localhost:8501 and upload a fundus photo. See [Web app](#web-app) for details.
+
 ## Final result
 
 **Private leaderboard QWK: 0.894** (public: 0.781), with a single EfficientNet-B3 model.
