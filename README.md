@@ -49,18 +49,46 @@ Local results for the final model (held-out APTOS test split): **QWK 0.915**, ac
 ## Repository structure
 
 ```
-aptos-2019-blindness-detection/
+aptos/
+├── app.py                  # Streamlit web UI (entry point)
 ├── README.md
 ├── requirements.txt
-├── 01_training.ipynb      # EfficientNet-B3 training (with 2015 data), threshold tuning, evaluation
-└── 02_submission.ipynb    # offline Kaggle submission for the EfficientNet-B3 model (Version 3)
+├── notebooks/
+│   ├── 01_training.ipynb   # EfficientNet-B3 training (with 2015 data), threshold tuning, evaluation
+│   └── 02_submission.ipynb # offline Kaggle submission for the EfficientNet-B3 model (Version 3)
+├── src/
+│   ├── inference.py        # preprocessing, fundus image check, model loading, flip-TTA prediction
+│   └── grade_info.py       # educational text for each DR grade, causes, symptoms
+├── models/                 # put best_model_effi.pth here (not tracked by git)
+└── assets/examples/        # reference image per grade from APTOS train set (not tracked by git)
 ```
 
-## How to run
+## Training on Kaggle
 
-1. Open the notebooks on Kaggle (GPU enabled).
+1. Open the notebooks in `notebooks/` on Kaggle (GPU enabled).
 2. **Training notebook:** attach the APTOS 2019 competition data and a resized 2015 Diabetic Retinopathy dataset; internet on (for pretrained weights).
 3. **Submission notebook:** attach the competition data and the training notebook's output (`best_model_effi.pth`); internet off.
+
+## Web app
+
+A Streamlit app for grading your own fundus images with the trained model.
+
+### Setup
+
+1. Download `best_model_effi.pth` from the training notebook's output and place it in the `models/` folder. (Kaggle may download it as `best_model_effi.zip`; don't extract it, just rename it to `.pth`.)
+2. `pip install -r requirements.txt`
+3. `streamlit run app.py`, then open http://localhost:8501
+
+Optional: put one labelled APTOS training image per grade in `assets/examples/` as `grade_0.jpg` … `grade_4.jpg` to show reference images in the app.
+
+### Features
+
+- **Analyse image:** upload one or more fundus photos and get the predicted grade (0–4), the continuous model score on a colour-coded severity bar, what that stage means, the signs an eye doctor looks for, the typical next step, and a reference image of the same grade
+- **Fundus image check:** before grading, each image is checked for the traits of a retina photo (a large, round, orange-red disc on a black background). Other images (selfies, webcam shots, screenshots) get a warning instead of a meaningless grade, with an "analyse anyway" override. On held-out images it accepted 99.7% of APTOS fundus photos and rejected 100% of ~500 everyday photos and screenshots
+- **Understanding DR:** what diabetic retinopathy is, how it develops, causes and risk factors, all five stages with example images, symptoms and prevention
+- **About the model:** scores, the prediction pipeline and limitations
+
+For research and education only, not for medical diagnosis.
 
 ## Possible improvements
 
@@ -68,7 +96,8 @@ aptos-2019-blindness-detection/
 - Use more of the 2015 dataset
 - Higher input resolution (384–512)
 - Generalized mean pooling and other techniques used by top solutions
+- Camera capture in the web app for smartphone fundus adapters
 
 ## Tech stack
 
-Python · PyTorch · torchvision · OpenCV · scikit-learn · pandas · NumPy · Kaggle
+Python · PyTorch · torchvision · OpenCV · scikit-learn · pandas · NumPy · Streamlit · Kaggle
