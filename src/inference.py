@@ -59,7 +59,12 @@ def check_fundus(img):
                               gray[-k:, :k].ravel(), gray[-k:, -k:].ravel()])
     dark_corners = (corners < 30).mean()
 
-    n, labels, stats, _ = cv2.connectedComponentsWithStats((gray > 15).astype(np.uint8))
+    # opening strips thin attachments (screenshot frames, caption text, camera
+    # notches) that would otherwise merge with the disc and break the roundness test
+    mask = (gray > 15).astype(np.uint8)
+    o = int(min(h, w) * 0.03) | 1
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (o, o)))
+    n, labels, stats, _ = cv2.connectedComponentsWithStats(mask)
     if n < 2:
         return False, ["The image is almost completely black."]
     disc = labels == 1 + np.argmax(stats[1:, cv2.CC_STAT_AREA])
