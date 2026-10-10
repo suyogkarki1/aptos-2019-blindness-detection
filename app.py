@@ -278,8 +278,8 @@ with tab_learn:
 with tab_model:
     m1, m2, m3 = st.columns(3)
     m1.metric("Kaggle private QWK", "0.894")
-    m2.metric("Local test QWK", "0.915")
-    m3.metric("Local test accuracy", "0.80")
+    m2.metric("Validation QWK", "0.891")
+    m3.metric("Training images", "19,879")
 
     st.markdown("### How a prediction is made")
     steps = [
@@ -294,8 +294,8 @@ with tab_model:
 
     st.markdown("### Training")
     st.markdown(
-        "- **Data:** APTOS 2019 (3,662 images) plus ~17k images from the 2015 "
-        "Diabetic Retinopathy Detection competition\n"
+        "- **Data:** 19,879 training images: 70% of APTOS 2019 (2,563) plus 17,316 from the 2015 "
+        "Diabetic Retinopathy Detection competition. Validation (549) and test (550) are APTOS only\n"
         "- **Model:** EfficientNet-B3, ImageNet pretrained, single regression output\n"
         "- **Loss:** MSE, so near-misses are penalised less than big errors, matching "
         "the Quadratic Weighted Kappa metric\n"

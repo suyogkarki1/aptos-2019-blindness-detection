@@ -36,10 +36,10 @@ For reference, the competition winner scored 0.936 private.
 - **Preprocessing:** Ben Graham method (circle crop + Gaussian-blur contrast enhancement), resized to 320×320
 - **Model:** EfficientNet-B3 (ImageNet pretrained) with a single regression output
 - **Loss:** MSE (regression), predictions converted to grades with thresholds
-- **External data:** ~17k images from the 2015 Diabetic Retinopathy Detection competition added to training (all diseased images + 8,000 healthy); validation and test kept APTOS-only
+- **External data:** ~17k images from the 2015 Diabetic Retinopathy Detection competition added to training (all diseased images + 8,000 healthy), giving 19,879 training images; validation (549) and test (550) kept APTOS-only
 - **Augmentation:** horizontal/vertical flips, full rotation, brightness/contrast jitter
 - **Training:** Adam, cosine LR schedule, mixed precision, best checkpoint chosen by validation QWK
-- **Inference:** flip test-time augmentation (TTA), simple rounding thresholds
+- **Inference:** flip test-time augmentation (TTA), simple rounding (cut-offs 0.5 / 1.5 / 2.5 / 3.5), the same in the Kaggle submission and the web app
 
 ## Results
 
@@ -50,7 +50,7 @@ For reference, the competition winner scored 0.936 private.
 | Version 2 | ResNet50, regression + rounding | 0.849 | 0.624 |
 | **Version 3** | **EfficientNet-B3 + 2015 external data** | **0.894** | **0.781** |
 
-Local results for the final model (held-out APTOS test split): **QWK 0.915**, accuracy 0.80.
+Local validation QWK for the final model (APTOS-only, rounding): **0.891**.
 
 ## Key lessons
 
