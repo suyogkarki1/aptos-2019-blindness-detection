@@ -4,7 +4,7 @@ numpy
 pandas
 scikit-learn
 scipy
-opencv-python
+opencv-python-headless
 matplotlib
 seaborn
 tqdm
